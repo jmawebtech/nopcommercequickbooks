@@ -1,0 +1,428 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+}
+@*@model Nop.Plugin.Accounting.QuickBooks.Models.QuickBooksModel
+@using Nop.Web.Framework;*@
+<p>To edit your settings, visit <a href="https://www.cloudcartconnector.com" target="_blank">Cloud Cart Connector</a>.</p>
+
+
+@*@using (Html.BeginForm())
+{
+  <style type="text/css">
+        .wide
+        {
+            width: 450px;
+        }
+    </style>
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            QuickBooks
+        </div>
+    </div>
+    @Html.ValidationSummary();
+    <p>To view the documentation, <a target="_blank" href="http://www.jmawebtechnologies.com/support/quickbooks/getting-started">please click here.</a></p>
+    <p>&nbsp;</p>
+    <div class="section-title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
+        Transaction Settings
+    </div>
+            
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <p>Choose what types of QuickBooks transactions to create. In the beginning, select pull. Then, run the web connector. This will populate the drop downs values beneath this paragraph. Pull mode pulls values from QuickBooks and enters them into nopCommerce. Once complete, select push. This mode takes orders from nopCommerce and adds them to QuickBooks.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="adminData" style="color: red; font-weight: bold;">
+                @Model.TestingResult
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DataMode)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("DataMode")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.InvoiceMode)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("InvoiceMode")
+            </td>
+        </tr>
+
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ToBePrinted)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.ToBePrinted)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerID)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("CustomerID")
+            </td>
+        </tr>
+    </table>
+    <p>
+        &nbsp;
+    </p>
+    <div class="section-title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
+        Other Settings
+    </div>
+    
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <p>
+                    If you are importing over a hundred orders into QB, leave these boxes unchecked! Check the first box to void any orders in QB that match order numbers being imported. By checking the delete QB duplicates box, orders are deleted QuickBooks. No Sales Receipts or Sales Orders are created with this option.
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UseMultiCurrency)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.UseMultiCurrency)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeleteQBDuplicates)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.DeleteQBDuplicates)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UpdateInStockFromQB)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.UpdateInStockFromQB)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
+                <label>Use UK Edition of QuickBooks</label>
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.UseUK)
+            </td>
+        </tr>
+
+    </table>
+    <p>&nbsp;</p>
+    <div class="section-title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
+        QuickBooks POS Settings
+    </div>
+    
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <p>
+                    Configure your POS settings in this area. If this is your first time using the POS integration, enter Test in this field.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">QuickBooks POS Connection String
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.ConnectionString, new { @class = "wide" })
+            </td>
+        </tr>
+    </table>
+    <p>
+        &nbsp;
+    </p>
+    <div class="section-title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
+        Account Settings
+    </div>
+    
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <p>
+                    Use the boxes below to configure accounts where QuickBooks transactions are created.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ItemAssetAcct)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ItemAssetAcct")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ItemCOGSAcct)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ItemCOGSAcct")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ItemIncomeAcct)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ItemIncomeAcct")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ARAAccount)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ARAAccount")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.InvDiscAcct)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("InvDiscAcct")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PmtARAccount)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("PmtARAccount")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BillAPAAccount)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("BillAPAAccount")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DefaultAccount)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("DefaultAccount")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SalesTaxVendor)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SalesTaxVendor")
+            </td>
+        </tr>
+    </table>
+    <p>
+        &nbsp;
+    </p>
+
+    <div class="section-title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
+        Export Settings
+    </div>
+   
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <p>
+                    To export orders by status, check the box and choose an order status. To export
+        by status and number, follow these steps:
+                </p>
+                <ol>
+                    <li>Check the box.</li>
+                    <li>Choose a status.</li>
+                    <li>Enter a highest and lowest number.</li>
+                </ol>
+                <p>
+                    To run a sync based on non exported orders, follow these steps:
+                </p>
+                <ol>
+                    <li>Assuming you want completed orders only, check the box and choose the complete status.</li>
+                    <li>Leave highest and lowest number at zero.</li>
+                    <li>Set order limit to zero.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.InsertZeroOrders)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.InsertZeroOrders)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SetExported)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.SetExported)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderStatus)
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("OrderStatus")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.HighestOrder)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.HighestOrder)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LowestOrder)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LowestOrder)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderLimit)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.OrderLimit)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LastDownloadUtc)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LastDownloadUtc)
+            </td>
+        </tr>
+
+                <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LastDownloadUtcEnd)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LastDownloadUtcEnd)
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2">
+                <p>To export certain orders, type them in like 2, 4, 6. Leave the highest and lowest order numbers as zero. If you want to export orders with a prefix, like I-(nop Order Id), enter a value in the order prefix field.</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderPrefix)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.OrderPrefix)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StringOrders)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StringOrders)
+            </td>
+        </tr>
+        <tr class="adminTitle">
+            <td colspan="2">
+                <p>If you would like orders to use an order number different than the nopCommerce order number, enter it below. Orders will start with this number and increment by one.</p>
+                <p>This feature is ideal if your order numbers are different than nopCommerce assigns its orders. If this number is 0, then the nopCommerce order number is used.</p>
+                <p>If you are looking to use the next available number in QuickBooks, instead of the nopCommerce order number, then enter the next available QuickBooks number below this paragraph.</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StartOrderNumber)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StartOrderNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MarkOrderComplete)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MarkOrderComplete)
+            </td>
+        </tr>
+
+    </table>
+    <p>
+        &nbsp;
+    </p>
+    
+    <div class="section-title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
+        Other Settings
+    </div>
+    
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <p>Enter your license key from JMA Web Technologies. The trial key lasts for 14 days before it stops working.</p>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Licensekey)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Licensekey)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button type="submit" name="build" value="build" class="t-button">
+                    Build Connector File</button>
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+                <button type="submit" name="installautosync" value="installautosync" class="t-button">
+                    Install Auto Sync</button>
+                <button type="submit" name="clear" value="clear" class="t-button">
+                    Clear Log</button>
+            </td>
+        </tr>
+    </table>   
+    
+}*@

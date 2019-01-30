@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AFB40CD6-2874-4509-AFCB-DE7FEE2254AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nop.Plugin.Accounting.QuickBooks</RootNamespace>
+    <AssemblyName>Nop.Plugin.Accounting.QuickBooks</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\..\Build\3.9\Plugins\Accounting.QuickBooks\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\Autofac.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\EntityFramework.SqlServer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="JMA.Plugin.Accounting.QuickBooks, Version=1.2.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Libraries\qb\JMA.Plugin.Accounting.QuickBooks.dll</HintPath>
+    </Reference>
+    <Reference Include="Nop.Core">
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\Nop.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nop.Data">
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\Nop.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nop.Services">
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\Nop.Services.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nop.Web">
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\Nop.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nop.Web.Framework">
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\Nop.Web.Framework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Libraries\nop\nop39\System.Web.Mvc.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\source\core\nop33\controllers\QuickBooksController.cs">
+      <Link>Controllers\QuickBooksController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\Source\Core\nop33\Utility\CustomValueUtility.cs">
+      <Link>Utility\CustomValueUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\nop33\INopQBProcess.cs">
+      <Link>INopQBProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\nop33\JMALogProviderFactory.cs">
+      <Link>JMALogProviderFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\core\nop33\model\QuickBooksModel.cs">
+      <Link>Model\QuickBooksModel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\core\nop33\module\QuickBooksSettings.cs">
+      <Link>Module\QuickBooksSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\core\nop33\module\RouteProvider.cs">
+      <Link>Module\RouteProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\nop33\NopCommerceLogProvider.cs">
+      <Link>NopCommerceLogProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\nop33\NopCommerceSqlSettingProvider.cs">
+      <Link>NopCommerceSqlSettingProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\nop33\QBPOSWebService.cs">
+      <Link>QBPOSWebService.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\..\Core\nop33\QBWebService.cs">
+      <Link>QBWebService.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="JMAWebServiceCommon.cs" />
+    <Compile Include="NopQBProcess.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QBOWebService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Core\nop33\Description.txt">
+      <Link>Description.txt</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\core\nop33\views\quickbooks\Configure.cshtml">
+      <Link>Views\QuickBooks\Configure.cshtml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

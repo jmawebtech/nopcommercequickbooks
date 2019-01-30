@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nop.Plugin.Tax.AvalaraTax")]
+[assembly: AssemblyTitle("JMA NopCommerce Integration")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("JMA Web Technologies, Inc")]
-[assembly: AssemblyProduct("Nop.Plugin.Tax.AvalaraTax")]
-[assembly: AssemblyCopyright("Copyright © JMA Web Technologies 2011 - 2017")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("JMA Cart Connectors")]
+[assembly: AssemblyCopyright("Copyright © JMA Web Technologies 2013 - 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("60c33a1c-4dd3-4e0d-991f-aba2e3b64a60")]
+[assembly: Guid("a478e16c-ecd5-4a7b-9b86-e54de1f3a1a8")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.6.0.0")]
-[assembly: AssemblyFileVersion("2.6.0.0")]
+[assembly: AssemblyVersion("2.3.0.0")]
+[assembly: AssemblyFileVersion("2.3.0.0")]
