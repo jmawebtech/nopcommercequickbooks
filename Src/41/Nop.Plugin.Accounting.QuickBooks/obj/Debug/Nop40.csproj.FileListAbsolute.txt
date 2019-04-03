@@ -1,0 +1,10 @@
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Build\40\Plugins\Accounting.QuickBooks\Description.txt
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Build\40\Plugins\Accounting.QuickBooks\logo.jpg
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Build\40\Plugins\Accounting.QuickBooks\Views\QuickBooks\Configure.cshtml
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Build\40\Plugins\Accounting.QuickBooks\web.config
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Build\40\Plugins\Accounting.QuickBooks\Nop.Plugin.Accounting.QuickBooks.dll
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Build\40\Plugins\Accounting.QuickBooks\Nop.Plugin.Accounting.QuickBooks.pdb
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Platform Support\NOP\Source\Versions\Nop40\obj\Debug\Nop40.csprojResolveAssemblyReference.cache
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Platform Support\NOP\Source\Versions\Nop40\obj\Debug\Nop40.csproj.CoreCompileInputs.cache
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Platform Support\NOP\Source\Versions\Nop40\obj\Debug\Nop.Plugin.Accounting.QuickBooks.dll
+C:\Users\joe_a84\Source\Workspaces\nopCommerce QuickBooks Connex\Platform Support\NOP\Source\Versions\Nop40\obj\Debug\Nop.Plugin.Accounting.QuickBooks.pdb

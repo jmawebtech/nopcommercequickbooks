@@ -1,0 +1,11 @@
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Plugins\Nop.Plugin.Accounting.QuickBooks\obj\Debug\netcoreapp2.1\Nop.Plugin.Accounting.QuickBooks.csprojResolveAssemblyReference.cache
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Plugins\Nop.Plugin.Accounting.QuickBooks\obj\Debug\netcoreapp2.1\Nop.Plugin.Accounting.QuickBooks.csproj.CoreCompileInputs.cache
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Plugins\Nop.Plugin.Accounting.QuickBooks\obj\Debug\netcoreapp2.1\Nop.Plugin.Accounting.QuickBooks.AssemblyInfoInputs.cache
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Plugins\Nop.Plugin.Accounting.QuickBooks\obj\Debug\netcoreapp2.1\Nop.Plugin.Accounting.QuickBooks.AssemblyInfo.cs
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Plugins\Nop.Plugin.Accounting.QuickBooks\obj\Debug\netcoreapp2.1\Nop.Plugin.Accounting.QuickBooks.dll
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Plugins\Nop.Plugin.Accounting.QuickBooks\obj\Debug\netcoreapp2.1\Nop.Plugin.Accounting.QuickBooks.pdb
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Presentation\Nop.Web\Plugins\Accounting.QuickBooks\plugin.json
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Presentation\Nop.Web\Plugins\Accounting.QuickBooks\logo.jpg
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Presentation\Nop.Web\Plugins\Accounting.QuickBooks\Nop.Plugin.Accounting.QuickBooks.deps.json
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Presentation\Nop.Web\Plugins\Accounting.QuickBooks\Nop.Plugin.Accounting.QuickBooks.dll
+C:\Users\joe_a84\Source\Workspaces\JMA Web Store\4\41\Presentation\Nop.Web\Plugins\Accounting.QuickBooks\Nop.Plugin.Accounting.QuickBooks.pdb
