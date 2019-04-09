@@ -1,4 +1,7 @@
 ﻿using ConnexForQuickBooks.Model;
+using Microsoft.EntityFrameworkCore;
+using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Stores;
@@ -10,6 +13,7 @@ using Nop.Services.Orders;
 using Nop.Services.Stores;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Nop.Plugin.Accounting.QuickBooks.Connection
@@ -18,12 +22,14 @@ namespace Nop.Plugin.Accounting.QuickBooks.Connection
     {
         IOrderService orderService;
         IStoreService storeService;
+        IRepository<Order> orderRepository;
         QuickBooksSettings settings;
 
         public OrderConnection(QuickBooksSettings settings)
         {
             this.orderService = EngineContext.Current.Resolve<IOrderService>();
             this.storeService = EngineContext.Current.Resolve<IStoreService>();
+            this.orderRepository = EngineContext.Current.Resolve<IRepository<Order>>();
             this.settings = settings;
         }
 
@@ -40,11 +46,28 @@ namespace Nop.Plugin.Accounting.QuickBooks.Connection
                 jmaOrderList.Add(jmaOd);
             }
 
+            return jmaOrderList;
+        }
+
+        /// <summary>
+        /// Refunds are pulled from last 30 days. Filter refunds with sync range.
+        /// </summary>
+        /// <returns></returns>
+        public List<JMAOrder> SearchRefunds()
+        {
+            List<JMAOrder> jmaOrderList = new List<JMAOrder>();
+
             List<Order> refunds = GetNopRefunds();
 
             foreach (Order od in refunds)
             {
                 JMAOrder jmaOd = MapRefund(od);
+
+                bool isOrderWithinSyncRange = jmaOd.CreationDate >= settings.LastDownloadUtc && jmaOd.CreationDate <= settings.LastDownloadUtcEnd;
+
+                if (!isOrderWithinSyncRange)
+                    continue;
+
                 jmaOrderList.Add(jmaOd);
             }
 
@@ -67,15 +90,7 @@ namespace Nop.Plugin.Accounting.QuickBooks.Connection
 
         private List<Order> GetNopOrders()
         {
-            List<int> completeStatusIds = new List<int>();
-            List<Order> orders = new List<Order>();
-            List<int> paymentStatusIds = new List<int>();
-            List<Order> refundedOrdersOnly = new List<Order>();
-
-            completeStatusIds.Add((int)OrderStatus.Complete);
-            paymentStatusIds.Add((int)PaymentStatus.Refunded);
-
-            List<int> storeIds = GetStoreIds();
+            IQueryable<Order> query = GetExpandedOrderTable();
 
             if (settings.LowestOrder > 0 && settings.HighestOrder > 0)
             {
@@ -85,11 +100,12 @@ namespace Nop.Plugin.Accounting.QuickBooks.Connection
                     orderIDs.Add(i);
                 }
 
-                orders.AddRange(orderService.GetOrdersByIds(orderIDs.ToArray()));
+                return orderService.GetOrdersByIds(orderIDs.ToArray()).ToList();
             }
             else if (settings.StringOrders != null && settings.StringOrders.Count() > 0)
             {
-                orders = new List<Order>();
+                List<Order> orders = new List<Order>();
+
                 foreach (string s in settings.StringOrders.Split(','))
                 {
                     int id = int.Parse(s);
@@ -99,26 +115,44 @@ namespace Nop.Plugin.Accounting.QuickBooks.Connection
                         orders.Add(ord);
                     }
                 }
+
+                return orders;
             }
             else
             {
                 DateTime beginTime = settings.LastDownloadUtc;
                 DateTime endTime = settings.LastDownloadUtcEnd;
 
-                if (storeIds.Count() == 0)
-                {
-                    orders = orderService.SearchOrders(0, 0, 0, 0, 0, 0, 0, null, beginTime, endTime).ToList();
-                }
-                else
-                {
-                    foreach (int storeId in storeIds)
-                    {
-                        orders.AddRange(orderService.SearchOrders(storeId, 0, 0, 0, 0, 0, 0, null, beginTime, endTime));
-                    }
-                }
+                query = query.Where(a => a.CreatedOnUtc >= beginTime);
+                query = query.Where(a => a.CreatedOnUtc <= endTime);
+
+                List<int> storeIds = GetStoreIds();
+
+                if (storeIds.Count() > 0)
+                    query = query.Where(a => storeIds.Contains(a.StoreId));
+
+                return new PagedList<Order>(query, 0, 1000).ToList();
             }
 
-            return orders;
+        }
+
+        /// <summary>
+        /// Expands order items and other sub properties.
+        /// Increases performance.
+        /// </summary>
+        /// <returns></returns>
+        private IQueryable<Order> GetExpandedOrderTable()
+        {
+            return orderRepository.Table
+                .Include(a => a.OrderItems)
+                .Include("OrderItems.Product")
+                .Include(a => a.OrderNotes)
+                .Include(a => a.GiftCardUsageHistory)
+                .Include(a => a.BillingAddress).ThenInclude(a => a.StateProvince).ThenInclude(a => a.Country)
+                .Include(a => a.ShippingAddress).ThenInclude(a => a.StateProvince).ThenInclude(a => a.Country)
+                .Include(a => a.Customer)
+                .Include(a => a.DiscountUsageHistory)
+                .Include(a => a.Shipments);
         }
 
         private List<int> GetStoreIds()
@@ -147,26 +181,25 @@ namespace Nop.Plugin.Accounting.QuickBooks.Connection
 
         private List<Order> GetNopRefunds()
         {
-            List<int> storeIds = GetStoreIds();
             List<Order> refundedOrdersOnly = new List<Order>();
-            DateTime beginTime = settings.LastDownloadUtc;
-            DateTime endTime = settings.LastDownloadUtcEnd;
             List<int> paymentStatusIds = new List<int>();
             paymentStatusIds.Add((int)PaymentStatus.Refunded);
 
-            if (storeIds.Count() == 0)
-            {
-                refundedOrdersOnly = orderService.SearchOrders(0, 0, 0, 0, 0, 0, 0, null, beginTime.AddDays(-30), endTime, null, paymentStatusIds).ToList();
-            }
-            else
-            {
-                foreach (int storeId in storeIds)
-                {
-                    refundedOrdersOnly.AddRange(orderService.SearchOrders(storeId, 0, 0, 0, 0, 0, 0, null, beginTime.AddDays(-30), endTime, null, paymentStatusIds));
-                }
-            }
+            IQueryable<Order> query = GetExpandedOrderTable();
 
-            return refundedOrdersOnly;
+            DateTime beginTime = settings.LastDownloadUtc.AddDays(-30);
+            DateTime endTime = settings.LastDownloadUtcEnd;
+
+            query = query.Where(a => a.CreatedOnUtc >= beginTime);
+            query = query.Where(a => a.CreatedOnUtc <= endTime);
+            query = query.Where(a => paymentStatusIds.Contains(a.PaymentStatusId));
+
+            List<int> storeIds = GetStoreIds();
+
+            if (storeIds.Count() > 0)
+                query = query.Where(a => storeIds.Contains(a.StoreId));
+
+            return new PagedList<Order>(query, 0, 1000).ToList();
         }
     }
 }

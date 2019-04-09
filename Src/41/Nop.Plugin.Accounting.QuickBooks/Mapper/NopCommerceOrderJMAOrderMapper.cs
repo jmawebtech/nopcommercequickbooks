@@ -33,6 +33,7 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
         IDateTimeHelper _dateTimeHelper;
         IProductService _productService;
         IProductAttributeParser _productAttributeParser;
+        Dictionary<string, string> paymentMethods = new Dictionary<string, string>();
 
         public NopCommerceOrderJMAOrderMapper()
         {
@@ -58,7 +59,7 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
 
             jmaOd.CurrencyCode = od.CustomerCurrencyCode;
             jmaOd.Id = od.Id;
-
+            jmaOd.OrderNumber = od.Id.ToString();
             jmaOd.OrderStatus = od.OrderStatus.ToString();
 
             MapNotes(od, jmaOd);
@@ -89,7 +90,6 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
 
             MapCheckoutAttributesNotes(od, jmaOd);
 
-            MapCustomerTaxExempt(od, jmaOd);
             return jmaOd;
         }
 
@@ -124,21 +124,25 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
 
         private void MapPaymentMethod(Order od, JMAOrder jmaOd)
         {
-            if (_paymentMethodService.LoadPaymentMethodBySystemName(od.PaymentMethodSystemName) != null)
-            {
-                jmaOd.CreditCardName = _paymentMethodService.LoadPaymentMethodBySystemName(od.PaymentMethodSystemName).PluginDescriptor.FriendlyName;
-                jmaOd.CardType = _encryptionService.DecryptText(od.CardType);
-            }
-        }
+            jmaOd.CreditCardName = _encryptionService.DecryptText(od.CardType);
 
-        private void MapCustomerTaxExempt(Order od, JMAOrder jmaOd)
-        {
-            if (od.Customer.Addresses.Count() > 0)
-            {
-                jmaOd.Customer.CompanyName = od.Customer.Addresses.FirstOrDefault().Company;
-            }
+            if (!String.IsNullOrEmpty(jmaOd.CreditCardName))
+                return;
 
-            jmaOd.Customer.IsTaxExempt = od.Customer.IsTaxExempt;
+            if(paymentMethods.Where(a => a.Key == od.PaymentMethodSystemName).Count() > 0)
+            {
+                jmaOd.CreditCardName = paymentMethods.Where(a => a.Key == od.PaymentMethodSystemName).ElementAt(0).Value;
+            }
+            else
+            {
+                IPaymentMethod cc = _paymentMethodService.LoadPaymentMethodBySystemName(od.PaymentMethodSystemName);
+                if (cc != null)
+                {
+                    jmaOd.CreditCardName = _paymentMethodService.LoadPaymentMethodBySystemName(od.PaymentMethodSystemName).PluginDescriptor.FriendlyName;
+                    jmaOd.CardType = _encryptionService.DecryptText(od.CardType);
+                    paymentMethods.Add(od.PaymentMethodSystemName, jmaOd.CreditCardName);
+                }
+            }
         }
 
         private void MapCheckoutAttributes(Order od, JMAOrder jmaOd)

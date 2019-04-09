@@ -1,5 +1,6 @@
 ﻿using ConnexForQuickBooks.Model;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
@@ -194,7 +195,6 @@ namespace Nop.Plugin.Accounting.QuickBooks
         IDateTimeHelper _dateTimeHelper;
         IProductService _productService;
         IProductAttributeParser _productAttributeParser;
-
         #endregion
     }
 }

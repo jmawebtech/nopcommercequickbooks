@@ -103,6 +103,8 @@ namespace Nop.Plugin.Accounting.QuickBooks.Controllers
             JMAUser theUser = new JMAUser();
             OrderConnection connection = new OrderConnection(settings);
             theUser.Orders = connection.Search();
+            theUser.CancelledOrders = connection.SearchRefunds();
+
             return new ObjectResult(theUser);
         }
 
