@@ -273,7 +273,9 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
 
                 if (!String.IsNullOrEmpty(ov.AttributeDescription))
                     pro.Description = ov.AttributeDescription + " " + ov.Product.Name;
-
+				else
+					pro.Description = ov.Product.Name;
+				
                 odd.Product = pro;
 
 
