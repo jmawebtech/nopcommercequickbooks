@@ -33,7 +33,8 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
         IDateTimeHelper _dateTimeHelper;
         IProductService _productService;
         IProductAttributeParser _productAttributeParser;
-        Dictionary<string, string> paymentMethods = new Dictionary<string, string>();
+        Dictionary<string, string> _paymentMethods = new Dictionary<string, string>();
+        private readonly IPaymentPluginManager _paymentPluginManager;
 
         public NopCommerceOrderJMAOrderMapper()
         {
@@ -49,6 +50,7 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
             _productService = EngineContext.Current.Resolve<IProductService>();
             _productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
             _storeService = EngineContext.Current.Resolve<IStoreService>();
+            _paymentPluginManager = EngineContext.Current.Resolve<IPaymentPluginManager>();
         }
 
         public JMAOrder Map(Order od)
@@ -90,7 +92,29 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
 
             MapCheckoutAttributesNotes(od, jmaOd);
 
+            MapCustomFields(od, jmaOd);
+
             return jmaOd;
+        }
+
+        /// <summary>
+        /// Maps custom values XML on nopCommerce order into Connex custom field object.
+        /// To map custom fields with Connex for QuickBooks Desktop, read this guide: https://help.syncwithconnex.com/hc/en-us/articles/360027546832-How-do-I-map-custom-fields-
+        /// </summary>
+        /// <param name="od"></param>
+        /// <param name="jmaOd"></param>
+        private void MapCustomFields(Order od, JMAOrder jmaOd)
+        {
+            Dictionary<string, object> values = CustomValueUtility.DeserializeCustomValues(od.CustomValuesXml);
+
+            foreach(KeyValuePair<string, object> value in values)
+            {
+                JMACustomField field = new JMACustomField();
+                field.AccountingName = value.Key;
+                field.ECommerceName = value.Key;
+                field.Value = value.Value.ToString();
+                jmaOd.JMACustomFields.Add(field);
+            }
         }
 
         private void MapNotes(Order od, JMAOrder jmaOd)
@@ -129,18 +153,18 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
             if (!String.IsNullOrEmpty(jmaOd.CreditCardName))
                 return;
 
-            if(paymentMethods.Where(a => a.Key == od.PaymentMethodSystemName).Count() > 0)
+            if(_paymentMethods.Where(a => a.Key == od.PaymentMethodSystemName).Count() > 0)
             {
-                jmaOd.CreditCardName = paymentMethods.Where(a => a.Key == od.PaymentMethodSystemName).ElementAt(0).Value;
+                jmaOd.CreditCardName = _paymentMethods.Where(a => a.Key == od.PaymentMethodSystemName).ElementAt(0).Value;
             }
             else
             {
-                IPaymentMethod cc = _paymentMethodService.LoadPaymentMethodBySystemName(od.PaymentMethodSystemName);
+                IPaymentMethod cc = _paymentPluginManager.LoadPluginBySystemName(od.PaymentMethodSystemName);
                 if (cc != null)
                 {
-                    jmaOd.CreditCardName = _paymentMethodService.LoadPaymentMethodBySystemName(od.PaymentMethodSystemName).PluginDescriptor.FriendlyName;
+                    jmaOd.CreditCardName = cc.PluginDescriptor.FriendlyName;
                     jmaOd.CardType = _encryptionService.DecryptText(od.CardType);
-                    paymentMethods.Add(od.PaymentMethodSystemName, jmaOd.CreditCardName);
+                    _paymentMethods.Add(od.PaymentMethodSystemName, jmaOd.CreditCardName);
                 }
             }
         }
@@ -253,7 +277,10 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
 
                 odd.Quantity = ov.Quantity;
 
-                odd.Sku = ov.Product.Sku;
+                if(!String.IsNullOrEmpty(ov.AttributesXml))
+                    odd.Sku = _productService.FormatSku(ov.Product, ov.AttributesXml);
+                else
+                    odd.Sku = ov.Product.Sku;
 
                 odd.DiscountExclTax = ov.DiscountAmountExclTax;
                 odd.DiscountInclTax = ov.DiscountAmountInclTax;
@@ -272,10 +299,10 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
                 pro.ManufacturerPartNumber = ov.Product.ManufacturerPartNumber;
 
                 if (!String.IsNullOrEmpty(ov.AttributeDescription))
-                    pro.Description = ov.AttributeDescription + " " + ov.Product.Name;
-				else
-					pro.Description = ov.Product.Name;
-				
+                    pro.Description = ov.AttributeDescription + "<br />" + ov.Product.Name;
+                else
+                    pro.Description = ov.Product.Name;
+
                 odd.Product = pro;
 
 
@@ -476,5 +503,5 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
         {
             return source.Select(s => Map(s)).ToList();
         }
-    }
+    }   
 }
