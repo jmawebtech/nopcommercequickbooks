@@ -181,6 +181,9 @@ namespace Nop.Plugin.Accounting.QuickBooks.Connection
 
         private List<Order> GetNopRefunds()
         {
+			if (!String.IsNullOrEmpty(settings.StringOrders))
+                return new List<Order>();
+
             List<Order> refundedOrdersOnly = new List<Order>();
             List<int> paymentStatusIds = new List<int>();
             paymentStatusIds.Add((int)PaymentStatus.Refunded);
