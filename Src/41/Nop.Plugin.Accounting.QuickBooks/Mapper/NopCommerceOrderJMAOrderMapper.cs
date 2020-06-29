@@ -451,6 +451,7 @@ namespace Nop.Plugin.Accounting.QuickBooks.Mapper
                 dis.Name = dd.Message;
                 dis.Code = "RewardPoints";
                 dis.Id = dd.Id;
+                dis.NonTaxable= true;
                 jmaOd.Discounts.Add(dis);
 
             }
